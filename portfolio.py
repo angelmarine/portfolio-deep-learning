@@ -30,6 +30,8 @@ def calculate_rtv(data):
     rtv = data_weekly_pct.iloc[0, 4] / data_weekly_sd.iloc[0, 4]
     return rtv
 
+''' For Test Purpose
+'''
 def dummy_porfolio(date, asset, companies_data):
     lstm = LstmModel(name="Test1", load=True)
     day_in, day_want, step = 50, 10, 2
@@ -40,7 +42,27 @@ def dummy_porfolio(date, asset, companies_data):
         _input = data.iloc[idx - day_in: idx + day_want - step + 1, 1:data.shape[1]]
         predictions = pd.DataFrame(lstm.predict(_input), index=pd.date_range(start=date, periods=10))
         break
-    return {}
+    return {}, {}
+
+
+def uniform_portfolio(date, asset, companies_data):
+    companies_prices = companies_prices_at(date=date, companies_data=companies_data)
+    num_companies = len(companies_data.keys())
+    portfolio_pct = {company: (1 / num_companies) for company in companies_data}
+    portfolio = {company: ((asset * pct) / companies_prices[company]) for company, pct in portfolio_pct.items()}
+    return portfolio, portfolio_pct
+
+
+def random_portfolio(date, asset, companies_data):
+    companies_prices = companies_prices_at(date=date, companies_data=companies_data)
+    num_companies = len(companies_data.keys())
+    random_list = np.random.randint(low=1, high=100, size=num_companies)
+    sum_random_list = sum(random_list)
+    portfolio_pct = {company: random_list[idx]/sum_random_list for idx, company in enumerate(companies_data.keys())}
+    portfolio = {company: ((asset * pct) / companies_prices[company]) for company, pct in portfolio_pct.items()}
+    return portfolio, portfolio_pct
+
+
 
 ''' Construct Portfolio Based On Predictions Of Prices One-Week Ahead
 '''
@@ -101,7 +123,16 @@ def evaluate_portfolio(portfolio, prices):
     return evaluation
 
 
-def backtest(start_date, end_date, start_asset):
+def backtest(start_date, end_date, start_asset, mode="lstm"):
+
+    if mode == "uniform":
+        rebalance = uniform_portfolio
+    elif mode == "random":
+        rebalance = random_portfolio
+    elif mode == "dummy":
+        rebalance = dummy_porfolio
+    else:
+        rebalance = rebalance_porfolio
 
     # ================= Initialize Configurations ====================
     # 1. Set Start Asset
@@ -114,7 +145,8 @@ def backtest(start_date, end_date, start_asset):
     current_asset = start_asset
     current_portfolio = dict()
 
-    # 2. Set Start Asset
+    # 2. Set Back Test Dates
+    day_want = 10
     path = os.path.join(DATA_DIR, 'AAPL_data.csv')
     df = pd.read_csv(path)
     df = df[(df["Date"] > start_date) & (df["Date"] <= end_date)]
@@ -144,14 +176,16 @@ def backtest(start_date, end_date, start_asset):
     print("======================Start Backtest==========================")
     print("Start Date: ", start_date)
     print("End Date: ", end_date)
-    print("Start Asset", start_asset)
+    print("Start Asset: ", start_asset)
+    print("Mode: ", mode)
 
     # Start Back Test
-    for i in range(0, len(backtest_dates)):
+    for i in range(len(backtest_dates)):
         # Rebalance Portfolio Every 5 Days
-        if (i % 5) == 0:
-            current_portfolio, percentages_portfolio = rebalance_porfolio(date=backtest_dates[i], asset=current_asset,
-                                                                          companies_data=companies_data)
+        if (i % 5) == 0 and (i+day_want) < len(backtest_dates):
+            current_portfolio, percentages_portfolio = rebalance(date=backtest_dates[i], asset=current_asset,
+                                                                 companies_data=companies_data)
+            portfolio_records.append(percentages_portfolio)
         # Evaluate Porfolio Every Day
         current_prices = companies_prices_at(date=backtest_dates[i], companies_data=companies_data)
         current_asset = evaluate_portfolio(current_portfolio, current_prices)
@@ -161,11 +195,13 @@ def backtest(start_date, end_date, start_asset):
         print("Records: ", backtest_records)
 
     # Plot Portfolio Performance Graph
-    plot_performance(filename='portfolio_graph_1', backtest_dates=backtest_dates, backtest_records=backtest_records)
+    plot_performance(filename='portfolio_graph_{}_{}'.format(mode, start_date), backtest_dates=backtest_dates,
+                     backtest_records=backtest_records)
 
     # Save Performance and Portfolio Records
-    save_json(filename='portfolio_performance_1', records=backtest_records)
-    save_json(filename='portfolio_records_1', records=portfolio_records)
+    save_json(filename='portfolio_performance_{}_{}'.format(mode, start_date), records=backtest_records)
+    save_json(filename='portfolio_records_{}_{}'.format(mode, start_date), records=portfolio_records)
+
 
 if __name__ == "__main__":
-    backtest(start_date="2018-05-29", end_date="2018-12-28", start_asset=10000)
+    backtest(start_date="2018-05-29", end_date="2018-12-28", start_asset=10000, mode='lstm')

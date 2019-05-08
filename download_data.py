@@ -3,7 +3,7 @@ import pandas as pd
 import yahoo_finance_pynterface as yahoo
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(CURRENT_DIR, 'new_data')
+DATA_DIR = os.path.join(CURRENT_DIR, 'old_data')
 
 # Get Symbols From Archieve
 symbols = []
@@ -13,8 +13,11 @@ with open(os.path.join(CURRENT_DIR, "company_list.txt"), 'r') as f:
         symbols.append(line.rstrip("\n"))
 print(symbols)
 
-START_DATE = '2015-07-06'
-END_DATE = '2018-12-31'
+START_DATE = '2015-01-02'
+END_DATE = '2018-06-30'
+
+# START_DATE = '2015-07-06'
+# END_DATE = '2018-12-31'
 
 # Get Closing Prices From Yahoo
 for symbol in symbols:

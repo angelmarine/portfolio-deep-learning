@@ -21,12 +21,12 @@ def plot_performance(filename, backtest_dates, backtest_records):
     filename = filename + '.png'
     filepath = os.path.join(RESULT_DIR, filename)
 
-    plt.figure(figsize=(10, 5))
-    plt.title("Portfolio Performance")
-    plt.plot(backtest_dates, backtest_records)
-    plt.xlabel("Dates")
-    plt.ylabel("Value($)")
-    # plt.legend()
+    fig, ax = plt.subplots(1, 1)
+    ax.title.set_text("Portfolio Performance")
+    ax.set_xlabel("Dates")
+    ax.set_ylabel("Value($)")
+    ax.plot(backtest_dates, backtest_records)
+    ax.set_xticks(ax.get_xticks()[::25])
     plt.savefig(filepath)
 
     print("Saved Graph To ", filepath)
