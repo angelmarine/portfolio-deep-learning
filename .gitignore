@@ -1,0 +1,12 @@
+# venv
+/venv
+
+# data
+/data
+/new_data
+
+# idea
+.idea/
+
+# pycache
+__pycache__/
