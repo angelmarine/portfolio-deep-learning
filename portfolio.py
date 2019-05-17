@@ -7,7 +7,7 @@ from utils import plot_performance, save_json
 from models import LstmModel
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(CURRENT_DIR, 'new_data')
+DATA_DIR = os.path.join(CURRENT_DIR, 'old_data')
 CHECKPOINT_DIR = os.path.join(CURRENT_DIR, 'checkpoint')
 
 
@@ -33,7 +33,7 @@ def calculate_rtv(data):
 ''' For Test Purpose
 '''
 def dummy_porfolio(date, asset, companies_data):
-    lstm = LstmModel(name="Test1", load=True)
+    lstm = LstmModel(name="Test2", load=True)
     day_in, day_want, step = 50, 10, 2
     for company, data in companies_data.items():
         # Predictions From LSTM
@@ -73,7 +73,7 @@ def rebalance_porfolio(date, asset, companies_data):
     print("=" * 50)
 
     # Load Trained Model
-    lstm = LstmModel(name="Test1", load=True)
+    lstm = LstmModel(name="Test2", load=True)
 
     # Save Values In Dict
     companies_rtv = dict()
@@ -204,4 +204,4 @@ def backtest(start_date, end_date, start_asset, mode="lstm"):
 
 
 if __name__ == "__main__":
-    backtest(start_date="2018-05-29", end_date="2018-12-28", start_asset=10000, mode='lstm')
+    backtest(start_date="2018-01-01", end_date="2018-06-29", start_asset=10000, mode='lstm')
