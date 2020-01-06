@@ -1,0 +1,9 @@
+pandas
+numpy
+requests
+sklearn
+aenum
+yahoo_finance_pynterface
+keras
+tensorflow
+matplotlib
