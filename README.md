@@ -36,7 +36,7 @@ Action: Rebalance Portfolio
 
 ## Results
 ### Backtest 1
-- Backtest Period: from "2018-01-01" to "2018-06-29"
+- Backtest Period: from "2018-01-01" to "2018-05-29"
 
 ![comparison_image1](results/comparison_graph1.png)
 
