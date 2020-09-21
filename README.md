@@ -19,7 +19,7 @@ We use two deep learning models to construct porfolio: Reinforcement Learning an
 - We used uniform and random portfolio benchmarks so compare the results. 
 
 ### Reinforcement Learning
-- We tried to train reinforcement learning model for optimal portfolio construction.
+- We adopted reinforcement learning model proposed by Liang [1] and modified the model for our system.
 - In the reinforcement learning approach, we had following settings
 ```
 Reinforcement Learning Setting
@@ -58,3 +58,4 @@ might be alleviated. However, that might not have been enough as well.
 - We believe that RL was constrainted in many ways (e.g. number of stocks options and discrete amounts for rebalancing) and that could be a reason for the loss.
 
 ## References
+[1] Z. Liang, H. Chen, J. Zhu, K. Jiang, and Y. Li.  Adversarialdeep reinforcement learning in portfolio management, 2018
