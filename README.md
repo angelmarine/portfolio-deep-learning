@@ -20,14 +20,14 @@ We use two deep learning models to construct porfolio: Reinforcement Learning an
 
 ### Reinforcement Learning
 - We adopted reinforcement learning model proposed by Liang [1] and modified the model for our system.
+- We tried to test different parameters as well as define different sets of universe.
 - In the reinforcement learning approach, we had following settings
 ```
 Reinforcement Learning Setting
 
 Goal: Maximise Profit
 
-Universe: Stocks in NASDAQ100
-State: Current Portfolio and Stock Information (Price, Volume, Other Indicators)
+State: Current Portfolio and Stock Prices (Close, High)
 Reward: Profit (+/-)
 Action: Rebalance Portfolio
 
