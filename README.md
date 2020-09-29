@@ -26,7 +26,7 @@ Reinforcement Learning Setting
 
 Goal: Maximise Profit
 
-State: Portfolio (Combination of Different Stock and Its Percentages) 
+State: Current Portfolio and NASDAQ100 Stock Information (Price, Volume, Other Indicators)
 Reward: Profit (+/-)
 Action: Rebalance Portfolio
 
